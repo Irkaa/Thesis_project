@@ -1,11 +1,13 @@
 import motor.motor_asyncio
-import os
-from dotenv import load_dotenv
+from app.utils.config import MONGO_URI, DB_NAME
 
-load_dotenv()
-
-MONGO_URI = os.getenv("MONGODB_URI")
-DB_NAME = os.getenv("DATABASE_NAME")
-
+# Initialize MongoDB client
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+
+# Access specific database
 db = client[DB_NAME]
+
+# Define your collections
+student_collection = db["students"]
+attendance_collection = db["attendance"]
+user_collection = db["users"]

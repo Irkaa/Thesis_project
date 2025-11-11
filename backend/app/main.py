@@ -1,25 +1,14 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.routes import test_db
+from app.routes import students
 
-app = FastAPI(title="Student Attendance System API")
-
-# Allow frontend (Next.js) to connect
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title="Student Attendance System API",
+    description="Handles student data management and facial recognition operations.",
+    version="1.0.0",
 )
 
-app.include_router(test_db.router)
+app.include_router(students.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Backend connected successfully!"}
+    return {"message": "Backend is running successfully"}

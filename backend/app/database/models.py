@@ -1,33 +1,30 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List
-from datetime import datetime
+from bson import ObjectId
 
-class StudentModel(BaseModel):
-    id: Optional[str] = Field(default=None, alias="id")
-    student_id: str
-    name: str
-    class_name: str
-    photo_url: Optional[str] = None
-    embedding: Optional[List[float]] = None  # for facial features
-
-    class Config:
-        populate_by_name = True  # updated for Pydantic v2
-        json_encoders = {datetime: lambda v: v.isoformat()}
+# Helper function to convert MongoDB document (_id as ObjectId) to a JSON-serializable dict
+def student_helper(student) -> dict:
+    return {
+        "id": str(student["_id"]),
+        "student_id": student["student_id"],
+        "name": student["name"],
+        "email": student["email"],
+        "class_name": student["class_name"],
+        "photo_url": student.get("photo_url"),
+    }
 
 
-class AttendanceModel(BaseModel):
-    id: Optional[str] = Field(default=None, alias="id")
-    student_id: str
-    date: datetime
-    status: str  # Present / Absent
+# (Optional) You can also define other helpers later, such as attendance or user models.
+def attendance_helper(record) -> dict:
+    return {
+        "id": str(record["_id"]),
+        "student_id": record["student_id"],
+        "date": record["date"],
+        "status": record["status"],
+    }
 
-    class Config:
-        populate_by_name = True
-        json_encoders = {datetime: lambda v: v.isoformat()}
 
-
-class UserModel(BaseModel):
-    id: Optional[str] = Field(default=None, alias="id")
-    username: str
-    password: str
-    role: Optional[str] = "teacher"
+def user_helper(user) -> dict:
+    return {
+        "id": str(user["_id"]),
+        "username": user["username"],
+        "role": user.get("role", "teacher"),
+    }

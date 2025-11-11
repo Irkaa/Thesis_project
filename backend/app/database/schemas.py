@@ -1,20 +1,9 @@
 from pydantic import BaseModel
-from typing import List, Optional
-from datetime import datetime
+from typing import Optional
 
-# Used for request/response validation
-
-class StudentCreate(BaseModel):
+class StudentBase(BaseModel):
     student_id: str
     name: str
+    email: str
     class_name: str
     photo_url: Optional[str] = None
-
-class AttendanceCreate(BaseModel):
-    student_id: str
-    date: datetime
-    status: str
-
-class UserCreate(BaseModel):
-    username: str
-    password: str
