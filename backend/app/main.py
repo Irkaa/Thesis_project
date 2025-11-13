@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import students
+from app.routes import students, attendance  # ← include attendance here
 
 app = FastAPI(
     title="Student Attendance System API",
@@ -7,7 +7,9 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Register both routers
 app.include_router(students.router)
+app.include_router(attendance.router)
 
 @app.get("/")
 async def root():
