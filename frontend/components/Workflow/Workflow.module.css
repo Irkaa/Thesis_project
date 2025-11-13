@@ -1,0 +1,115 @@
+.workflow {
+  padding: 6rem 2rem;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 4rem;
+  color: #111111;
+}
+
+.workflowContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 220px;
+  padding: 2rem;
+  border-radius: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.step:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.iconWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0070f3;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.stepNumber {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  background-color: #ff5722;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step svg {
+  width: 40px;
+  height: 40px;
+}
+
+.stepText h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 0.4rem;
+}
+
+.stepText p {
+  font-size: 1rem;
+  color: #555555;
+}
+
+/* Straight arrow */
+.arrow svg {
+  width: 60px;
+  height: 40px;
+}
+
+.arrow path {
+  stroke: #0070f3;
+  stroke-width: 3;
+  fill: none;
+  marker-end: url(#arrowhead); /* arrowhead at end */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .workflowContainer {
+    flex-direction: column;
+  }
+  .arrow {
+    display: none; /* stacked layout, no arrows */
+  }
+}

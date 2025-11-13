@@ -1,3 +1,173 @@
-* {
-  font-family:'Times New Roman', Times, serif;
+/* ===========================
+   RESET & BASE STYLES
+   =========================== */
+
+/* Box-sizing & margin reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Default body styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #ffffff;
+  color: #333;
+  scroll-behavior: smooth;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: #222;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+/* Lists */
+ul, ol {
+  list-style: none;
+}
+
+/* Images & media */
+img, picture, video {
+  max-width: 100%;
+  display: block;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* Inputs & textareas */
+input, textarea, select {
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #0070f3;
+}
+
+/* ===========================
+   CSS VARIABLES / THEME
+   =========================== */
+
+:root {
+  --primary-color: #0070f3;
+  --primary-hover: #005bb5;
+  --secondary-color: #ffcd00;
+  --secondary-hover: #e6b800;
+  --background-color: #f4f7fb;
+  --text-color: #333;
+  --text-secondary: #555;
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+}
+
+/* ===========================
+   UTILITY CLASSES
+   =========================== */
+
+/* Spacing */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 2rem; }
+.mt-5 { margin-top: 4rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 2rem; }
+.mb-5 { margin-bottom: 4rem; }
+
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 2rem; }
+.p-5 { padding: 4rem; }
+
+/* Flex utilities */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-col { display: flex; flex-direction: column; }
+
+/* Text alignment */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Width & max-width */
+.w-full { width: 100%; }
+.max-w-4xl { max-width: 64rem; margin: 0 auto; }
+
+/* Rounded */
+.rounded { border-radius: var(--border-radius); }
+.rounded-lg { border-radius: 12px; }
+
+/* Box shadow */
+.shadow { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.shadow-md { box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+/* Buttons */
+/* Buttons – Updated for dark and light backgrounds */
+.btn {
+  padding: 0.75rem 1.75rem;
+  background-color: #2563eb; /* blue-600 */
+  color: #fff;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #1e40af; /* blue-800 */
+}
+
+.btn-secondary {
+  padding: 0.75rem 1.75rem;
+  background-color: transparent;
+  color: #60a5fa;
+  border: 2px solid #60a5fa;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #60a5fa;
+  color: #111827;
+}
+
+/* Responsive images & videos */
+.responsive { max-width: 100%; height: auto; }
+
+html {
+  scroll-behavior: smooth;
 }

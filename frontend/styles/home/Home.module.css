@@ -1,6 +1,25 @@
-.h1 {
-  font-size: 60px;
-  align-items: center;
+.ctaSection {
   text-align: center;
-  color:black;
+  padding: 4rem 2rem;
+  background-color: #fff;
+}
+
+.ctaSection h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.ctaButton {
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  text-decoration: none;
+  color: #333;
+  background-color: var(--secondary-color);
+  transition: background-color var(--transition-speed) ease;
+}
+
+.ctaButton:hover {
+  background-color: var(--secondary-hover);
 }
