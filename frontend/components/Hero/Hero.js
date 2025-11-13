@@ -8,11 +8,11 @@ export default function Hero() {
       <div className={styles.content}>
         <h1 className={styles.title}>Smart Attendance System</h1>
         <p className={styles.subtitle}>
-          Record and manage student attendance instantly using face recognition.
+          Record and manage student attendance instantly using facial recognition.
         </p>
         <div className={styles.buttons}>
-          <a href="/login" className="btn">Login</a>
-          <a href="/dashboard" className="btn-secondary">Dashboard</a>
+          <a href="/auth" className="btn">Login / Register</a>
+          {/* <a href="/dashboard" className="btn-secondary">Dashboard</a> */}
         </div>
       </div>
     </section>
