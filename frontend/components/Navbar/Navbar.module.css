@@ -1,0 +1,48 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem; /* padding нэмэгдүүлсэн */
+  background-color: #ffffff; /* цэвэр цагаан */
+  color: #333333; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* зөөлөн сүүдэр */
+}
+
+.logo {
+  font-size: 2rem; /* логог томруулсан */
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #111111;
+}
+
+.navLinks {
+  display: flex;
+  gap: 2rem; /* зайг нэмэгдүүлсэн */
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem; /* icon ба текстийн зайг нэмсэн */
+  color: #333333;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem; /* текстийг томруулсан */
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #000000; /* subtle hover */
+}
+
+.icon {
+  vertical-align: middle;
+  stroke: #333333;
+  width: 24px;
+  height: 24px; /* icon томруулсан */
+  transition: stroke 0.2s;
+}
+
+.navLink:hover .icon {
+  stroke: #000000;
+}

@@ -1,0 +1,65 @@
+.footer {
+  background-color: #ffffff;
+  color: #333333;
+  padding: 3rem 2rem;
+  font-size: 1rem;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111111;
+}
+
+.link {
+  color: #333333;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #000000;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  stroke: #333333;
+  transition: stroke 0.2s;
+}
+
+.link:hover .icon {
+  stroke: #000000;
+}
+
+.social {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.copy {
+  margin-top: 2rem;
+  text-align: center;
+  color: #666666;
+  font-size: 0.9rem;
+}
