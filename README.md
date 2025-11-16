@@ -17,6 +17,9 @@ Rebuild image (only if requriements.txt or Dockerfile changed)
 Restart backend container:
     5. docker-compose restart backend
 
+Reset database :
+   6. docker-compose down -v
+    docker-compose up
 
 ## Frontend
 Open `frontend/index.html` in your browser for manual testing.
