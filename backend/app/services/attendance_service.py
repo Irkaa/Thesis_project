@@ -1,49 +1,112 @@
 from datetime import datetime
+from bson import ObjectId
 from app.database.connection import db
-from app.database.models import attendance_helper
 
+# Collections
 attendance_collection = db["attendance"]
-student_collection = db["students"]
+class_sessions_collection = db["class_sessions"]
+students_collection = db["students"]
+recognition_logs_collection = db["recognition_logs"]
 
-def get_today_str() -> str:
-    return datetime.now().strftime("%Y-%m-%d")
 
+# -----------------------------------------------------------
+# 1) Manual attendance (if you need it later)
+# -----------------------------------------------------------
 async def mark_attendance_service(student_id: str, status: str):
-    """Mark or update a student's attendance for today."""
-    student = await student_collection.find_one({"student_id": student_id})
-    if not student:
-        return None
+    """
+    Manually mark a student's attendance.
+    status: 'present' or 'absent'
+    """
 
-    today = get_today_str()
+    if status not in ["present", "absent"]:
+        raise ValueError("Invalid attendance status")
 
-    existing = await attendance_collection.find_one({"student_id": student_id, "date": today})
-    if existing:
-        await attendance_collection.update_one(
-            {"_id": existing["_id"]},
-            {"$set": {"status": status}}
-        )
-        updated = await attendance_collection.find_one({"_id": existing["_id"]})
-        return attendance_helper(updated)
+    # Create or update attendance record
+    result = await attendance_collection.update_one(
+        {"student_id": student_id},
+        {
+            "$set": {
+                "present": (status == "present"),
+                "timestamp": datetime.utcnow()
+            }
+        },
+        upsert=True
+    )
 
-    record = {
+    return {
         "student_id": student_id,
-        "date": today,
-        "status": status,
+        "present": (status == "present"),
+        "timestamp": datetime.utcnow()
     }
-    new_record = await attendance_collection.insert_one(record)
-    created = await attendance_collection.find_one({"_id": new_record.inserted_id})
-    return attendance_helper(created)
 
-async def get_attendance_by_date_service(date: str):
-    """Retrieve all attendance records for a specific date."""
-    records = []
-    async for record in attendance_collection.find({"date": date}):
-        records.append(attendance_helper(record))
-    return records
 
-async def get_student_attendance_history_service(student_id: str):
-    """Retrieve attendance history for a specific student."""
-    records = []
-    async for record in attendance_collection.find({"student_id": student_id}):
-        records.append(attendance_helper(record))
-    return records
+# -----------------------------------------------------------
+# 2) Recognition-based attendance (the important part)
+# -----------------------------------------------------------
+async def mark_attendance_from_recognition(class_session_id: str, detected_student_ids: list):
+    """
+    Takes a class_session_id and a list of recognized student_ids,
+    then marks present/absent for all students in that class.
+    """
+
+    # Validate session ID
+    if not ObjectId.is_valid(class_session_id):
+        raise ValueError("Invalid class_session_id")
+
+    # Fetch session
+    session = await class_sessions_collection.find_one({"_id": ObjectId(class_session_id)})
+    if not session:
+        raise ValueError("Class session not found")
+
+    class_id = session["class_id"]
+
+    # Fetch all students who belong to the class
+    students_cursor = students_collection.find({"class_id": class_id})
+    all_students = [str(s["_id"]) async for s in students_cursor]
+
+    present = []
+    absent = []
+
+    # Loop through each student in the class and mark presence/absence
+    for sid in all_students:
+        if sid in detected_student_ids:
+            present.append(sid)
+
+            await attendance_collection.update_one(
+                {"student_id": sid, "class_session_id": class_session_id},
+                {
+                    "$set": {
+                        "present": True,
+                        "timestamp": datetime.utcnow()
+                    }
+                },
+                upsert=True
+            )
+
+        else:
+            absent.append(sid)
+
+            await attendance_collection.update_one(
+                {"student_id": sid, "class_session_id": class_session_id},
+                {
+                    "$set": {
+                        "present": False,
+                        "timestamp": datetime.utcnow()
+                    }
+                },
+                upsert=True
+            )
+
+    # Save recognition log for auditing/debugging
+    await recognition_logs_collection.insert_one({
+        "class_session_id": class_session_id,
+        "detected_students": detected_student_ids,
+        "timestamp": datetime.utcnow()
+    })
+
+    return {
+        "class_session_id": class_session_id,
+        "present": present,
+        "absent": absent,
+        "total_students": len(all_students)
+    }
