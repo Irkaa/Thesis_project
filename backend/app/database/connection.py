@@ -1,13 +1,18 @@
-import motor.motor_asyncio
+from motor.motor_asyncio import AsyncIOMotorClient
 from app.utils.config import MONGO_URI, DB_NAME
 
-# Initialize MongoDB client
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+# Create async MongoDB client
+client = AsyncIOMotorClient(MONGO_URI)
+database = client[DB_NAME]
 
-# Access specific database
-db = client[DB_NAME]
+# Export db as alias for compatibility
+db = database
 
-# Define  collections
-student_collection = db["students"]
-attendance_collection = db["attendance"]
-user_collection = db["users"]
+# Define all collections
+student_collection = database.get_collection("students")
+attendance_collection = database.get_collection("attendance")
+user_collection = database.get_collection("users")
+class_collection = database.get_collection("classes")
+class_session_collection = database.get_collection("class_sessions")
+student_embedding_collection = database.get_collection("student_embeddings")
+recognition_log_collection = database.get_collection("recognition_logs")

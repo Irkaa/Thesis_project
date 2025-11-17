@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, Any
 from datetime import datetime
 
@@ -82,3 +82,19 @@ class AttendanceResponse(BaseModel):
     recognized_time: datetime
     status: str
     recognized_confidence: Optional[float] = None
+
+class UserBase(BaseModel):
+    name: str
+    email: EmailStr
+    password: str   # raw plain password (only for input)
+    role: str = "teacher" 
+
+class UserOut(BaseModel):
+    id: str
+    name: str
+    email: EmailStr
+    role: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str

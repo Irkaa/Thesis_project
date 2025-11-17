@@ -1,90 +1,81 @@
-from bson import ObjectId
+"""
+Database model helpers - converts MongoDB documents to JSON.
+"""
+from datetime import datetime
 
-# Helper function to convert MongoDB document (_id as ObjectId) to a JSON-serializable dict
+
 def student_helper(student) -> dict:
     return {
         "id": str(student["_id"]),
         "student_id": student["student_id"],
         "name": student["name"],
-        "email": student["email"],
-        "class_name": student["class_name"],
+        "email": student.get("email"),
+        "class_id": student.get("class_id"),
+        "class_name": student.get("class_name"),
         "photo_url": student.get("photo_url"),
+        "created_at": student.get("created_at")
     }
 
 
-# (Optional) You can also define other helpers later, such as attendance or user models.
-def attendance_helper(record) -> dict:
+def attendance_helper(attendance) -> dict:
+    """Single definition with all fields"""
     return {
-        "id": str(record["_id"]),
-        "student_id": record["student_id"],
-        "date": record["date"],
-        "status": record["status"],
+        "id": str(attendance["_id"]),
+        "student_id": attendance["student_id"],
+        "class_session_id": attendance.get("class_session_id"),
+        "present": attendance["present"],
+        "timestamp": attendance["timestamp"]
     }
 
 
 def user_helper(user) -> dict:
+    """Single definition with all fields"""
     return {
         "id": str(user["_id"]),
-        "username": user["username"],
-        "role": user.get("role", "teacher"),
+        "name": user["name"],
+        "email": user["email"],
+        "role": user["role"],
+        "created_at": user.get("created_at")
     }
 
 
-def class_helper(class_doc) -> dict:
+def class_helper(c) -> dict:
     return {
-        "class_id": str(class_doc["_id"]),
-        "class_name": class_doc.get("class_name"),
-        "teacher_id": class_doc.get("teacher_id"),
-        "semester": class_doc.get("semester"),
-        "department": class_doc.get("department"),
+        "id": str(c["_id"]),
+        "class_name": c["class_name"],
+        "teacher_id": c["teacher_id"],
+        "student_ids": c.get("student_ids", []),
+        "created_at": c.get("created_at")
     }
 
 
-def class_session_helper(doc) -> dict:
+def class_session_helper(session) -> dict:
     return {
-        "session_id": str(doc["_id"]),
-        "class_id": doc.get("class_id"),
-        "date": doc.get("date"),
-        "start_time": doc.get("start_time"),
-        "end_time": doc.get("end_time"),
-        "location": doc.get("location"),
-        "session_type": doc.get("session_type"),
+        "id": str(session["_id"]),
+        "class_id": session["class_id"],
+        "session_date": session["session_date"],
+        "status": session["status"],
+        "attendance_marked": session["attendance_marked"],
+        "created_at": session["created_at"]
     }
 
 
-def recognition_log_helper(doc) -> dict:
+def recognition_log_helper(log) -> dict:
     return {
-        "log_id": str(doc["_id"]),
-        "student_id": doc.get("student_id"),
-        "event_time": doc.get("event_time").isoformat() if doc.get("event_time") else None,
-        "confidence": doc.get("confidence"),
-        "camera_id": doc.get("camera_id"),
-        "status": doc.get("status"),
-        "raw_face_capture_s3_url": doc.get("raw_face_capture_s3_url"),
-        "embedding_vector": doc.get("embedding_vector"),
-        "matched_student_id": doc.get("matched_student_id"),
-        "distance_score": doc.get("distance_score"),
-        "session_id": doc.get("session_id"),
-    }
-# event_time is converted to ISO string for JSON safety.
-
-def student_embedding_helper(doc) -> dict:
-    return {
-        "embedding_id": str(doc["_id"]),
-        "student_id": doc.get("student_id"),
-        "embedding": doc.get("embedding"),
-        "photo_s3_url": doc.get("photo_s3_url"),
-        "version": doc.get("version"),
-        "created_at": doc.get("created_at"),
+        "id": str(log["_id"]),
+        "detections": log["detections"],
+        "uploaded_by": log["uploaded_by"],
+        "class_id": log.get("class_id"),
+        "session_id": log.get("session_id"),
+        "timestamp": log["timestamp"].isoformat() if isinstance(log["timestamp"], datetime) else log["timestamp"]
     }
 
 
-def attendance_helper(doc) -> dict:
+def student_embedding_helper(embedding) -> dict:
     return {
-        "attendance_id": str(doc["_id"]),
-        "student_id": doc.get("student_id"),
-        "session_id": doc.get("session_id"),
-        "recognized_time": doc.get("recognized_time"),
-        "status": doc.get("status"),
-        "recognized_confidence": doc.get("recognized_confidence"),
+        "id": str(embedding["_id"]),
+        "student_id": embedding["student_id"],
+        "version": embedding.get("version", 1),
+        "photo_s3_url": embedding.get("photo_s3_url"),
+        "created_at": embedding.get("created_at")
     }

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from app.routes import students, attendance, classes, class_sessions, recognition_logs, student_embeddings, recognition  # ← include attendance here
-
+from app.routes import (
+    students, attendance, classes, class_sessions, recognition_logs, student_embeddings, recognition, auth
+)
 app = FastAPI(
     title="Student Attendance System API",
     description="Handles student data management and facial recognition operations.",
@@ -15,6 +16,7 @@ app.include_router(class_sessions.router)
 app.include_router(recognition_logs.router)
 app.include_router(student_embeddings.router)
 app.include_router(recognition.router)
+app.include_router(auth.router)
 
 @app.get("/")
 async def root():

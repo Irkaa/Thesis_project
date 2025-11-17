@@ -1,23 +1,38 @@
-# This function is used by the endpoint to generate a 512-dim embedding.
-
-import numpy as np
+"""
+Student enrollment service.
+Handles single face photo uploads for student registration.
+"""
 import cv2
-from insightface.app import FaceAnalysis
+import numpy as np
+from app.services.face_recognition import (
+    detect_single_face,
+    extract_embedding
+)
 
 
-# Load ArcFace model once
-face_app = FaceAnalysis(name="buffalo_l")
-face_app.prepare(ctx_id=0, det_size=(640, 640))
-
-
-def extract_embedding_from_image(image_bytes: bytes):
-    jpg = np.frombuffer(image_bytes, dtype=np.uint8)
-    img = cv2.imdecode(jpg, cv2.IMREAD_COLOR)
-
-    faces = face_app.get(img)
-
-    if len(faces) == 0:
+def generate_embedding_from_image(image_bytes: bytes) -> list[float] | None:
+    """
+    Generate face embedding from uploaded student photo.
+    Used during student enrollment by admin.
+    
+    Args:
+        image_bytes: Image file bytes
+        
+    Returns:
+        512-dim embedding vector or None if no face detected
+    """
+    # Decode image
+    arr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    
+    if img is None:
         return None
-
-    face = faces[0]
-    return face.normed_embedding.tolist()
+    
+    # Detect single face
+    face_crop = detect_single_face(img)
+    if face_crop is None:
+        return None
+    
+    # Extract embedding
+    embedding = extract_embedding(face_crop)
+    return embedding

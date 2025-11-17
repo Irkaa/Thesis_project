@@ -1,31 +1,28 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from app.services.embedding_service import extract_embedding_from_image
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from app.services.embedding_service import generate_embedding_from_image
 from app.services.student_embedding_service import add_student_embedding_service
+from app.utils.rbac import AdminOnly
 
-router = APIRouter(prefix="/students", tags=["Student Embeddings"])
+router = APIRouter(prefix="/student-embeddings", tags=["Student Embeddings"])
 
 
-@router.post("/{student_id}/upload-face")
-async def upload_face(student_id: str, image: UploadFile = File(...)):
-    # Read uploaded file
-    image_bytes = await image.read()
+@router.post("/{student_id}", dependencies=[Depends(AdminOnly)])
+async def upload_embedding(student_id: str, file: UploadFile = File(...)):
+    """Upload student face embedding - Admin only"""
+    image_bytes = await file.read()
 
-    # Extract embedding
-    embedding = extract_embedding_from_image(image_bytes)
-
+    embedding = generate_embedding_from_image(image_bytes)
     if embedding is None:
-        raise HTTPException(status_code=400, detail="No face detected in image")
+        raise HTTPException(status_code=400, detail="No face detected in the image")
 
-    # Save embedding (S3 will be added later)
-    result = await add_student_embedding_service(
-        student_id=student_id,
-        embedding=embedding,
-        photo_url=None
-    )
+    result = await add_student_embedding_service(student_id, embedding)
+    if not result:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Student with id {student_id} not found"
+        )
 
     return {
-        "message": "Student face registered successfully",
-        "embedding_saved": True,
-        "embedding_id": result["embedding_id"],
-        "student_id": result["student_id"]
+        "message": "Embedding stored successfully",
+        "embedding": result
     }
